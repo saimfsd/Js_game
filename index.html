@@ -3,86 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Word Puzzle Game</title>
-<style>
-    body{
-        margin:0;
-        font-family:Arial;
-        background:#000;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:100vh;
-        color:white;
-    }
-
-    .screen{
-        width:330px;
-        padding:20px;
-        text-align:center;
-        border-radius:15px;
-        background:linear-gradient(180deg,#8f2bff,#d257fb,#e05ff6);
-        display:none;
-    }
-    .active{ display:block; }
-
-    .btn{
-        padding:10px 25px;
-        font-size:18px;
-        border:none;
-        border-radius:25px;
-        background:white;
-        color:#7d00ff;
-        cursor:pointer;
-        margin-top:20px;
-        font-weight:bold;
-    }
-
-    .grid{
-        display:grid;
-        grid-template-columns:repeat(5,1fr);
-        gap:8px;
-        margin:15px auto;
-        width:200px;
-    }
-    .letter{
-        background:white;
-        color:black;
-        padding:10px 0;
-        border-radius:6px;
-        font-weight:bold;
-        font-size:18px;
-    }
-
-    input{
-        padding:10px;
-        width:90%;
-        margin-top:10px;
-        border:none;
-        border-radius:8px;
-        font-size:16px;
-    }
-
-    .check-btn{
-        padding:10px 20px;
-        background:white;
-        border:none;
-        border-radius:30px;
-        color:#8a00ff;
-        cursor:pointer;
-        margin-top:10px;
-        font-weight:bold;
-    }
-</style>
+<link rel="stylesheet" href="./assest/index.css">
 </head>
 <body>
-
-<!-- ============ START SCREEN ============ -->
+ <!-- START SCREEN  -->
 <div id="startScreen" class="screen active">
     <h2>Let's Start</h2>
     <button class="btn" onclick="startGame()">Start</button>
 </div>
 
-<!-- ============ PUZZLE SCREEN ============ -->
+ <!-- PUZZLE SCREEN  -->
 <div id="gameScreen" class="screen">
     <h3>Find the word</h3>
 
@@ -93,110 +23,21 @@
     <button class="check-btn" onclick="checkAnswer()">Check</button>
 </div>
 
-<!-- ============ CORRECT SCREEN ============ -->
+<!--  CORRECT SCREEN -->
 <div id="correctScreen" class="screen">
     <h2>🎉 Congratulations!</h2>
     <p>Your answer is correct!</p>
     <button class="btn" onclick="nextPuzzle()">Next →</button>
 </div>
 
-<!-- ============ WRONG SCREEN ============ -->
+  <!-- WRONG SCREEN  -->
 <div id="wrongScreen" class="screen">
     <h2>😢 Sorry!</h2>
     <p>Your answer is wrong.</p>
     <button class="btn" onclick="backToGame()">← Back</button>
 </div>
 
-<script>
-let words = [
-    "BALL","BOOK","TREE","STAR","KING","RING","FISH","BIRD","MILK","MOON",
-    "RAIN","WIND","HOME","FARM","ROAD","FIRE","LION","BEAR","WALL","DOOR",
-    "SHIP","JUMP","PLAY","TIME","WALK","WORK","HAND","FOOD","COLD","WARM",
-    "SNOW","BLUE","GOLD","LOVE","NOTE","HEAR","EARN","SAND"
-];
-
-let current = 0;
-
-function show(id){
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
-
-function startGame(){
-    loadPuzzle();
-    show("gameScreen");
-}
-
-function loadPuzzle(){
-    let grid = document.getElementById("lettersGrid");
-    grid.innerHTML = "";
-
-    let word = words[current];
-    let letters = word.split("");
-
-    let board = Array(25).fill(null);
-
-    // Random direction: horizontal or vertical
-    let isHorizontal = Math.random() > 0.5;
-
-    let row, col;
-
-    if(isHorizontal){
-        // Choose random row (0-4)
-        row = Math.floor(Math.random() * 5);
-        // Choose random column where the word fits (0-1)
-        col = Math.floor(Math.random() * 2); 
-        for(let i = 0; i < 4; i++){
-            board[row * 5 + (col + i)] = letters[i];
-        }
-    } 
-    else {
-        // Vertical placement
-        col = Math.floor(Math.random() * 5);
-        row = Math.floor(Math.random() * 2); 
-        for(let i = 0; i < 4; i++){
-            board[(row + i) * 5 + col] = letters[i];
-        }
-    }
-
-    let randomLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    // Fill empty spots with random letters
-    for(let i = 0; i < 25; i++){
-        if(!board[i]){
-            board[i] = randomLetters[Math.floor(Math.random() * randomLetters.length)];
-        }
-    }
-
-    // Render board
-    board.forEach(l => {
-        grid.innerHTML += `<div class="letter">${l}</div>`;
-    });
-}
-
-function checkAnswer(){
-    let ans = document.getElementById("userInput").value.toUpperCase();
-    if(ans === words[current]){
-        show("correctScreen");
-    } else {
-        show("wrongScreen");
-    }
-}
-
-function nextPuzzle(){
-    current++;
-    if(current >= words.length){
-        current = 0;
-    }
-    document.getElementById("userInput").value = "";
-    loadPuzzle();
-    show("gameScreen");
-}
-
-function backToGame(){
-    show("gameScreen");
-}
-</script>
+<script src="./assest/index.js"></script>
 
 </body>
 </html>
