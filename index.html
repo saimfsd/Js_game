@@ -6,15 +6,26 @@
 <link rel="stylesheet" href="./assest/index.css">
 </head>
 <body>
- <!-- START SCREEN  -->
+
+<!-- START SCREEN -->
 <div id="startScreen" class="screen active">
     <h2>Let's Start</h2>
     <button class="btn" onclick="startGame()">Start</button>
 </div>
 
- <!-- PUZZLE SCREEN  -->
+<!-- GAME SCREEN -->
 <div id="gameScreen" class="screen">
-    <h3>Find the word</h3>
+    <h3>Find the Word</h3>
+
+    <div class="score-box">
+        Score: <span id="scoreValue">0</span>
+    </div>
+
+    <div class="score-box">
+        Time: <span id="timeValue">60</span>s
+    </div>
+
+    <button class="btn" onclick="showHint()">Hint</button>
 
     <div class="grid" id="lettersGrid"></div>
 
@@ -23,21 +34,20 @@
     <button class="check-btn" onclick="checkAnswer()">Check</button>
 </div>
 
-<!--  CORRECT SCREEN -->
+<!-- CORRECT SCREEN -->
 <div id="correctScreen" class="screen">
-    <h2>🎉 Congratulations!</h2>
-    <p>Your answer is correct!</p>
+    <h2>🎉 Correct!</h2>
+    <p>You guessed the word!</p>
     <button class="btn" onclick="nextPuzzle()">Next →</button>
 </div>
 
-  <!-- WRONG SCREEN  -->
+<!-- WRONG SCREEN -->
 <div id="wrongScreen" class="screen">
-    <h2>😢 Sorry!</h2>
-    <p>Your answer is wrong.</p>
+    <h2>❌ Wrong!</h2>
+    <p>Try again!</p>
     <button class="btn" onclick="backToGame()">← Back</button>
 </div>
 
 <script src="./assest/index.js"></script>
-
 </body>
 </html>

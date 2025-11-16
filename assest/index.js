@@ -1,4 +1,3 @@
-
 let words = [
     "BALL","BOOK","TREE","STAR","KING","RING","FISH","BIRD","MILK","MOON",
     "RAIN","WIND","HOME","FARM","ROAD","FIRE","LION","BEAR","WALL","DOOR",
@@ -7,82 +6,120 @@ let words = [
 ];
 
 let current = 0;
+let score = 0;
+let timer = 60;
+let timerInterval;
 
-function show(id){
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+function show(id) {
+    let screens = document.getElementsByClassName("screen");
+    for (let i = 0; i < screens.length; i++) {
+        screens[i].classList.remove("active");
+    }
     document.getElementById(id).classList.add("active");
 }
 
-function startGame(){
+function startTimer() {
+    timer = 60;
+    document.getElementById("timeValue").innerHTML = timer;
+
+    clearInterval(timerInterval);
+
+    timerInterval = setInterval(function () {
+        timer = timer - 1;
+        document.getElementById("timeValue").innerHTML = timer;
+
+        if (timer <= 0) {
+            clearInterval(timerInterval);
+            alert("Time Over! Final Score: " + score);
+            location.reload();
+        }
+    }, 1000);
+}
+
+function startGame() {
     loadPuzzle();
+    startTimer();
     show("gameScreen");
 }
 
-function loadPuzzle(){
+function loadPuzzle() {
     let grid = document.getElementById("lettersGrid");
     grid.innerHTML = "";
 
     let word = words[current];
     let letters = word.split("");
 
-    let board = Array(25).fill(null);
+    let board = [];
+    for (let i = 0; i < 25; i++) {
+        board.push("");
+    }
 
-    
-    let isHorizontal = Math.random() > 0.5;
+    let horizontal = Math.random() > 0.5;
+    let row = Math.floor(Math.random() * 5);
+    let col = Math.floor(Math.random() * 5);
 
-    let row, col;
+    if (horizontal && col > 1) {
+        col = 1;
+    }
+    if (!horizontal && row > 1) {
+        row = 1;
+    }
 
-    if(isHorizontal){
-       
-        row = Math.floor(Math.random() * 5);
-        col = Math.floor(Math.random() * 2); 
-        for(let i = 0; i < 4; i++){
+    for (let i = 0; i < 4; i++) {
+        if (horizontal) {
             board[row * 5 + (col + i)] = letters[i];
-        }
-    } 
-    else {
-        // Vertical placement
-        col = Math.floor(Math.random() * 5);
-        row = Math.floor(Math.random() * 2); 
-        for(let i = 0; i < 4; i++){
+        } else {
             board[(row + i) * 5 + col] = letters[i];
         }
     }
 
-    let randomLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    // Fill empty spots with random letters
-    for(let i = 0; i < 25; i++){
-        if(!board[i]){
-            board[i] = randomLetters[Math.floor(Math.random() * randomLetters.length)];
+    for (let i = 0; i < 25; i++) {
+        if (board[i] === "") {
+            let r = Math.floor(Math.random() * alphabet.length);
+            board[i] = alphabet[r];
         }
     }
 
-    // Render board
-    board.forEach(l => {
-        grid.innerHTML += `<div class="letter">${l}</div>`;
-    });
+    for (let i = 0; i < 25; i++) {
+        let box = document.createElement("div");
+        box.className = "letter";
+        box.innerHTML = board[i];
+        grid.appendChild(box);
+    }
 }
 
-function checkAnswer(){
+function checkAnswer() {
     let ans = document.getElementById("userInput").value.toUpperCase();
-    if(ans === words[current]){
+
+    if (ans === words[current]) {
+        score = score + 1;
+        document.getElementById("scoreValue").innerHTML = score;
         show("correctScreen");
     } else {
         show("wrongScreen");
     }
 }
 
-function nextPuzzle(){
-    current++;
-    if(current >= words.length){
+function nextPuzzle() {
+    current = current + 1;
+
+    if (current >= words.length) {
         current = 0;
     }
+
     document.getElementById("userInput").value = "";
     loadPuzzle();
+    startTimer();
     show("gameScreen");
 }
 
-function backToGame(){
+function backToGame() {
     show("gameScreen");
+}
+
+function showHint() {
+    let w = words[current];
+    alert("Hint: Word starts with " + w[0]);
 }
